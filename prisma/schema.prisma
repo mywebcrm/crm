@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  role       String   @default("bartender")
+  created_at DateTime @default(now())
+  sales      Sale[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  color String?
+  cocktails Cocktail[]
+}
+
+model Cocktail {
+  id          Int       @id @default(autoincrement())
+  name        String   @unique
+  price       Float
+  image       String?
+  category_id Int?
+  category    Category? @relation(fields: [category_id], references: [id])
+  recipe      Recipe[]
+  saleItems   SaleItem[]
+}
+
+model Sale {
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  user_id     Int
+  paymentType String
+  total       Float
+  items       SaleItem[]
+  user        User      @relation(fields: [user_id], references: [id])
+}
+
+model SaleItem {
+  id          Int      @id @default(autoincrement())
+  sale_id     Int
+  cocktail_id Int
+  qty         Int
+  price       Float
+  cocktail    Cocktail  @relation(fields: [cocktail_id], references: [id])
+  sale        Sale      @relation(fields: [sale_id], references: [id])
+}
+
+model Ingredient {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  unit        String
+  stock_qty   Float
+  min_qty     Float
+  recipe      Recipe[]
+}
+
+model Recipe {
+  id            Int @id @default(autoincrement())
+  cocktail_id   Int
+  ingredient_id Int
+  qty           Float
+  cocktail      Cocktail   @relation(fields: [cocktail_id], references: [id])
+  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
+
+  @@unique([cocktail_id, ingredient_id])
+}

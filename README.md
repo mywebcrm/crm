@@ -1,0 +1,74 @@
+# 🍸 Bar CRM (Vercel Edition)
+
+Неоновая CRM-система для бара с POS-кассой, складом и отчётами. Проект развёртывается как единый Next.js-приложение на Vercel (frontend + serverless backend).
+
+## ✨ Возможности
+
+- 🔐 Авторизация по ролям (бармен, менеджер, админ) через JWT-cookie.
+- 💳 POS-стойка с быстрым оформлением продаж и списанием ингредиентов по рецептурам.
+- 📦 Склад с контролем минимума и связью коктейль ↔ ингредиенты.
+- 📊 Отчёты по выручке, топ-продажам и типам оплат + экспорт CSV.
+- ⚙️ Настройки: управление пользователями, резервное копирование, сброс демо-данных.
+
+## 🧱 Стек
+
+- Next.js 15 (App Router)
+- Prisma ORM + SQLite (локально и на Vercel `/tmp`)
+- Tailwind CSS
+- TypeScript
+
+## 🚀 Запуск локально
+
+1. Скопируйте переменные окружения и при необходимости отредактируйте:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Установите зависимости и подготовьте базу данных (сид вернёт демо-данные):
+
+   ```bash
+   npm install
+   npx prisma db push
+   npm run seed
+   ```
+
+3. Запустите dev-сервер Next.js:
+
+   ```bash
+   npm run dev
+   ```
+
+Откройте [http://localhost:3000](http://localhost:3000) и войдите под `admin / admin`.
+
+## 🌐 Деплой на Vercel
+
+1. Подключите репозиторий к Vercel.
+2. Укажите переменные окружения:
+   - `DATABASE_URL` — `file:/tmp/barcrm.db` для демо или URL PostgreSQL/Neon.
+   - `ADMIN_LOGIN`, `ADMIN_PASS` — логин/пароль администратора для сидов.
+   - `NEXTAUTH_SECRET` — секрет подписи JWT.
+3. Vercel автоматически выполнит `npm install`, `npx prisma generate`, `npm run build` и развернёт `/api/**` как serverless-функции.
+
+## 🔄 Смена БД
+
+Для боевого режима замените `DATABASE_URL` на PostgreSQL (например, Neon). Prisma-схема совместима с Postgres — достаточно выполнить `prisma migrate` и обновить переменную окружения.
+
+## 📁 Структура
+
+```
+/app             # App Router страницы и API
+/lib             # Prisma, auth и утилиты
+/prisma          # Схема и сид данных
+/public          # Неоновые заглушки коктейлей
+```
+
+## 🧪 Скрипты
+
+- `npm run dev` — режим разработки
+- `npm run build` — production-сборка
+- `npm run seed` — повторно применить демо-данные
+
+## 📎 CI / CD
+
+В репозитории есть GitHub Actions workflow для автоматического деплоя в Vercel. Добавьте `VERCEL_TOKEN` в secrets, чтобы активировать пайплайн.
