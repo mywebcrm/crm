@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 const navigation = [
   { href: '/home', label: 'Главная' },
+  { href: '/ai-playlist', label: 'AI плейлист' },
   { href: '/sales', label: 'Продажи' },
   { href: '/inventory', label: 'Склад' },
   { href: '/reports', label: 'Отчёты' },
