@@ -11,6 +11,7 @@ const navigation = [
   { href: '/sales', label: 'Продажи' },
   { href: '/inventory', label: 'Склад' },
   { href: '/reports', label: 'Отчёты' },
+  { href: '/ai-playlist', label: 'AI Плейлист' },
   { href: '/settings', label: 'Настройки' }
 ];
 
